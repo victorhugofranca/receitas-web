@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Receitas</title>
+</h:head>
+
+<h:body>
+
+	<h:form id="listForm">
+
+		<p:dataTable id="receitasDataTableId" var="receita"
+			value="#{receitaListAction.instances}" paginatorPosition="top"
+			paginator="true" rows="10" lazy="true">
+
+			<p:column>
+				<p:commandButton icon="ui-icon-circle-plus" id="selectLinkId"
+					actionListener="#{receitaSelectDialogAction.select(receita)}" />
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+						Título
+					</f:facet>
+				<p:outputLabel value="#{receita.titulo}" />
+			</p:column>
+
+		</p:dataTable>
+	</h:form>
+</h:body>
+
+</html>

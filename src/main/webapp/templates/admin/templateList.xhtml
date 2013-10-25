@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body
+	style="background-image: url(#{request.contextPath}/resources/images/macback.png) !important">
+	<h:outputStylesheet name="css/default.css" />
+
+	<div>
+		<p:layout id="mainLayoutId" fullPage="true">
+			<p:layoutUnit id="layoutTopMenu" position="north">
+				<ui:include src="topMenu.xhtml" />
+			</p:layoutUnit>
+
+			<p:layoutUnit id="layouLefttMenu" position="west" size="200"
+				collapsible="true">
+				<div id="ultimasAcoesDiv">
+					<ui:include src="menuFuncionalidades.xhtml" />
+				</div>
+			</p:layoutUnit>
+
+			<p:layoutUnit id="layoutUnitDashBoard" position="center">
+				<ui:include src="title.xhtml" />
+
+				<h:form id="listForm">
+					<ui:insert name="body" />
+
+					<p:panel>
+						<h:commandLink>
+							<p:graphicImage value="/resources/images/pdf.png" />
+							<p:dataExporter type="pdf" target="dataTableId" fileName="report"
+								pageOnly="true" />
+						</h:commandLink>
+					</p:panel>
+
+					<p:confirmDialog global="true" showEffect="fade"
+						hideEffect="explode">
+						<p:commandButton value="Sim" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+						<p:commandButton value="Não" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+
+				</h:form>
+
+			</p:layoutUnit>
+
+			<p:layoutUnit id="layoutUnitRodape" position="south">
+				<p:outputLabel>© SIGEN Sistemas - Direitos Reservados.</p:outputLabel>
+			</p:layoutUnit>
+
+		</p:layout>
+
+	</div>
+
+</h:body>
+</html>

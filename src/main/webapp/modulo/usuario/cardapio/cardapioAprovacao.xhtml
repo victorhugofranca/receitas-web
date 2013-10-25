@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/usuario/templateBasic.xhtml">
+
+	<ui:define name="title">Aprovação de cardápio</ui:define>
+
+	<ui:define name="body">
+
+		<h:form>
+
+			<p:wizard showStepStatus="false" nextLabel="Próximo Passo"
+				backLabel="Passo Anterior">
+
+				<p:tab id="idTabCardapioReceitas">
+
+					<p:panel>
+						<p:outputLabel
+							value="Este é o seu cardápio. Aqui você poderá avaliar as receitas que foram selecionadas para você. 
+					Caso não goste de alguma delas, basta clicar nos botões que ficam ao de cada uma." />
+					</p:panel>
+
+					<p:panel>
+						<p:dataTable id="receitasDataTableId" var="cardapioItem"
+							value="#{cardapioAprovacaoAction.instance.cardapioItens}"
+							paginatorPosition="top" paginator="true" rows="6" lazy="true">
+
+							<p:column>
+								<p:selectBooleanButton id="btnAprovadoId"
+									value="#{cardapioItem.aprovado}" onLabel="Gostei"
+									offLabel="Não gostei" onIcon="ui-icon-check"
+									offIcon="ui-icon-close" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<p:outputLabel value="Receita" />
+								</f:facet>
+								<p:outputLabel value="#{cardapioItem.receita.titulo}" />
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="idTabReceitasParaSubstituir">
+
+					<p:panel>
+						<p:outputLabel
+							value="Você informou não gostar das receitas abaixo. Se possível, gostaria que me informasse o motivo de cada uma das rejeições. Isto me ajudará para que eu possa selecionar receitas mais adequadas ao seu paladar. Para concluir, basta clicar em Substituir Receitas. Caso deseje voltar à lista com todas as receitas, clique em Passo Anterior." />
+					</p:panel>
+
+
+					<p:panel>
+						<p:dataTable id="receitasNaoAprovadasDataTableId"
+							var="cardapioItem"
+							value="#{cardapioAprovacaoAction.itensCardapioRejeitados}"
+							paginatorPosition="top" paginator="true" rows="6" lazy="true">
+							<p:column>
+								<f:facet name="header">
+									<p:outputLabel value="Título" />
+								</f:facet>
+								<p:outputLabel value="#{cardapioItem.receita.titulo}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<p:outputLabel value="Motivo" />
+								</f:facet>
+								<p:inputText value="#{cardapioItem.motivoRejeicao}"
+									style="width: 100%;" />
+							</p:column>
+
+						</p:dataTable>
+
+						<p:panel>
+							<p:toolbar>
+								<p:toolbarGroup align="left">
+									<p:commandButton value="Substituir Receitas"
+										action="#{cardapioAprovacaoAction.substituirReceitas}" />
+								</p:toolbarGroup>
+							</p:toolbar>
+						</p:panel>
+
+					</p:panel>
+				</p:tab>
+
+			</p:wizard>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+

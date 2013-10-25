@@ -1,0 +1,50 @@
+<html>
+<head>
+
+<link
+	href="/resources/jtable/themes/redmond/jquery-ui-1.8.16.custom.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="/resources/jtable/scripts/jtable/themes/lightcolor/blue/jtable.css"
+	rel="stylesheet" type="text/css" />
+
+<script src="scripts/jquery-1.6.4.min.js" type="text/javascript"></script>
+<script src="/resources/jtable/scripts/jquery-ui-1.8.16.custom.min.js"
+	type="text/javascript"></script>
+<script src="/resources/jtable/scripts/jtable/jquery.jtable.js"
+	type="text/javascript"></script>
+
+</head>
+
+<body>
+	<div id="PeopleTableContainer" style="width: 600px;"></div>
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+			//Prepare jTable
+			$('#PeopleTableContainer').jtable({
+				title : 'Table of people',
+				actions : {
+					listAction : 'rest/service/1000/0',
+					createAction : 'rest/animais/salvar',
+					updateAction : 'rest/animais/alterar',
+					deleteAction : 'rest/animais/deletar'
+				},
+				fields : {
+					nome : {
+						key : true,
+						create : false,
+						edit : false,
+						list : false
+					}
+				}
+			});
+
+			//Load person list from server
+			$('#PeopleTableContainer').jtable('load');
+
+		});
+	</script>
+
+</body>
+</html>

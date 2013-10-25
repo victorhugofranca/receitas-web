@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:jgen="http://java.sun.com/jsf/composite/component/jgen"
+	template="/templates/admin/templateForm.xhtml">
+
+	<ui:define name="title">Cadastro de Cliente</ui:define>
+
+	<ui:define name="body">
+
+		<f:metadata>
+			<f:event type="javax.faces.event.PreRenderViewEvent"
+				listener="#{clienteFormAction.beginConversation}" />
+		</f:metadata>
+
+		<h:form id="clienteFormId">
+
+			<p:tabView id="tabView" dynamic="true" cache="false">
+
+				<p:tab id="tabForm" title="Dados do cliente">
+					<h:inputHidden value="#{clienteFormAction.instance.idCliente}" />
+					<h:inputHidden value="#{clienteFormAction.instance.senha}" />
+
+					<p:panelGrid columns="2" id="panelGridId">
+						<p:outputLabel value="Nome" />
+						<p:inputText value="#{clienteFormAction.instance.nome}"
+							id="inputNomeId" />
+
+						<p:outputLabel value="Login" />
+						<p:inputText value="#{clienteFormAction.instance.login}"
+							id="inputLoginId" style="width: 500px;" />
+
+						<p:outputLabel value="e-mail" />
+						<p:inputText value="#{clienteFormAction.instance.email}"
+							id="inputEmailId" style="width: 500px;" />
+
+						<p:outputLabel value="Preferências de Alimentação" />
+						<p:inputTextarea
+							value="#{clienteFormAction.instance.preferenciasAlimentacao}"
+							id="inputPreferenciasAlimentacaoId" style="width: 500px;" />
+
+					</p:panelGrid>
+				</p:tab>
+
+				<p:tab id="tabCardapio" title="Cardápio">
+
+					<p:panelGrid columns="3">
+						<p:outputLabel id="receitaTituloId" value="Receita" />
+						<jgen:selectDialog id="inputTituloReceitaId"
+							inputTextValue="#{clienteFormAction.receitaTemp.titulo}"
+							returnActionListener="#{clienteFormAction.onReceitaChosen}"
+							searchActionListener="#{receitaSelectDialogAction.pesquisar}"
+							style="width: 500px;" />
+						<p:commandButton icon="ui-icon-circle-plus"
+							id="commandButtonAddItemId" update="cardapiosDataTableId"
+							actionListener="#{clienteFormAction.addItemCardapio()}" />
+					</p:panelGrid>
+
+					<p:dataTable id="cardapiosDataTableId" var="cardapioItem"
+						value="#{clienteFormAction.instance.cardapio.cardapioItens}"
+						paginatorPosition="top" paginator="true" rows="10" lazy="true">
+
+						<p:column>
+							<p:commandButton icon="ui-icon-circle-minus" id="removeItemId"
+								action="#{clienteFormAction.deleteItemCardapio(cardapioItem)}"
+								update="cardapiosDataTableId" />
+						</p:column>
+
+						<p:column>
+							<p:selectBooleanButton id="btnAprovadoId"
+								value="#{cardapioItem.aprovado}" onLabel="Gostei"
+								offLabel="Não gostei" onIcon="ui-icon-check"
+								offIcon="ui-icon-close" disabled="true" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<p:outputLabel>Receita</p:outputLabel>
+							</f:facet>
+							<p:outputLabel value="#{cardapioItem.receita.titulo}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<p:outputLabel value="Motivo Rejeição" />
+							</f:facet>
+							<p:inputText value="#{cardapioItem.motivoRejeicao}"
+								style="width: 100%;" readonly="true" />
+						</p:column>
+
+					</p:dataTable>
+
+				</p:tab>
+
+				<p:tab id="tabSessoes" title="Sessões"
+					rendered="#{clienteFormAction.instance.cardapio.status.valor eq 'Aprovado'}">
+
+					<p:panelGrid columns="3">
+						<p:outputLabel id="itemSessaoReceitaTituloId" value="Receita" />
+
+						<p:panelGrid columns="2">
+							<p:inputText id="itemSessaoReceitaTituloInputId"
+								value="#{clienteFormAction.itemSessaoTemp.receita.titulo}"
+								readonly="true" />
+							<p:commandButton icon="ui-icon-search" id="searchId"
+								onclick="PF('dlg').show()">
+								<p:ajax event="dialogReturn"
+									update="itemSessaoReceitaTituloInputId" />
+							</p:commandButton>
+
+							<p:dialog header="Ítens do cardápio" widgetVar="dlg"
+								resizable="false">
+								<h:form id="form">
+									<p:dataTable id="cardapioItemsDataTableId" var="cardapioItem"
+										value="#{clienteFormAction.instance.cardapio.cardapioItens}"
+										paginatorPosition="top" paginator="true" rows="10" lazy="true">
+
+										<p:column>
+											<p:commandButton icon="ui-icon-circle-plus" id="selectLinkId"
+												actionListener="#{clienteFormAction.selectCardapioItem(cardapioItem)}" />
+										</p:column>
+
+										<p:column>
+											<f:facet name="header">
+												<p:outputLabel value="Título" />
+											</f:facet>
+											<p:outputLabel value="#{cardapioItem.receita.titulo}" />
+										</p:column>
+
+									</p:dataTable>
+								</h:form>
+							</p:dialog>
+						</p:panelGrid>
+					</p:panelGrid>
+
+					<p:dataTable id="sessoesDataTableId" var="sessao"
+						value="#{clienteFormAction.instance.cardapio.sessoes}"
+						paginatorPosition="top" paginator="true" rows="10" lazy="true">
+
+						<p:column>
+							<p:commandButton icon="ui-icon-circle-minus" id="removeItemId"
+								action="#{clienteFormAction.deleteSessao(sessao)}"
+								update="sessoesDataTableId" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<p:outputLabel>Data</p:outputLabel>
+							</f:facet>
+							<p:outputLabel value="#{sessao.data}" />
+						</p:column>
+
+					</p:dataTable>
+
+				</p:tab>
+
+			</p:tabView>
+
+			<p:commandButton value="Salvar" action="#{clienteFormAction.save}"
+				id="commandButtonEditId" />
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

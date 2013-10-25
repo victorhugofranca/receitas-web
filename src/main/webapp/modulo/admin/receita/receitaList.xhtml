@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/admin/templateList.xhtml">
+
+	<ui:define name="title">Cadastro de Receitas</ui:define>
+
+	<ui:define name="body">
+
+		<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton value="Novo" icon="ui-icon-document"
+					action="receitaForm" />
+			</p:toolbarGroup>
+		</p:toolbar>
+
+		<p:dataTable id="dataTableId" var="receita"
+			value="#{receitaListAction.instances}" paginatorPosition="top"
+			paginator="true" rows="10" lazy="true">
+
+			<p:column exportable="false">
+				<p:commandButton icon="ui-icon-circle-minus"
+					action="#{receitaListAction.delete(receita)}" update="dataTableId">
+					<p:confirm header="Confirmação" message="Remover receita?"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+
+				<p:commandButton icon="ui-icon-pencil" action="receitaForm">
+					<f:setPropertyActionListener target="#{receitaFormAction.instance}"
+						value="#{receita}" />
+				</p:commandButton>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+						Titulo
+					</f:facet>
+				<p:outputLabel value="#{receita.titulo}" />
+			</p:column>
+
+		</p:dataTable>
+
+	</ui:define>
+</ui:composition>
+
